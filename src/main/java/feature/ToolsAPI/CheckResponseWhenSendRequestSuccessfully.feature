@@ -1,4 +1,18 @@
-Feature:ToolsAPITesting
-Scenario: Check response when send request successfully
-When send request with valid URL and method and params
-Then API responds status code 200 and list of tools
+Feature: ToolsAPITesting
+
+  Scenario Outline: Check response when send request successfully
+    Given I have header
+      | key               | value              |
+      | "Accept-Encoding" | "gzip,deflate,br"  |
+      | Accept            | "application/json" |
+    Given I have url and method
+      | url                                                                                       | method |
+      | "https://simple-tool-rental-api.glitch.me?category=@category&result&available=@available" | GET    |
+    Given I have "<category>" and "<result>" of tools and "<available>" status
+    When send request with valid URL and method and params
+    Then Api responds status code "<StatusCode>" and list of tools
+
+    Examples:
+      | category | result | available | StatusCode |
+      | trailers | 5      | true      | 200        |
+      | ladders  | 3      | true      | 200        |
