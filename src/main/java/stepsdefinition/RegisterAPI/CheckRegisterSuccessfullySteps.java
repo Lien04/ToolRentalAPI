@@ -3,7 +3,10 @@ package stepsdefinition.RegisterAPI;
 import static org.testng.AssertJUnit.assertEquals;
 
 import java.net.http.HttpResponse;
+
+import common.JsonUtils;
 import common.ScenarioContext;
+import io.cucumber.datatable.DataTable;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 
@@ -17,8 +20,11 @@ public class CheckRegisterSuccessfullySteps {
 	}
 
 	@Given("I have request body")
-	public void i_have_request_body() {
-		requestBody = "{\"email\": \"eve.holt@reqres.in\", \"password\": \"pistol\"}";
+	public void i_have_request_body(DataTable requestBodyTable) {
+		// Get the request body from the data table
+		String requestBodyName = requestBodyTable.asMaps().get(0).get("requestBody");
+		JsonUtils jsonUtils = new JsonUtils();
+		requestBody = jsonUtils.readJsonFile(requestBodyName);
 	}
 	
 //	@When("send request")
@@ -38,6 +44,7 @@ public class CheckRegisterSuccessfullySteps {
 
 	@Then("Api responds body")
 	public void api_responds_body() {
+		
 	}
 
 }
