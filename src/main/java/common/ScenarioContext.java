@@ -4,11 +4,15 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class ScenarioContext {
-	private Map<String, Object> context = new HashMap<>();
-	public void setContext(String key, Object value) {
+	private Map<Context, Object> context;
+	
+	public ScenarioContext() {
+		this.context = new HashMap<>();
+	}
+	public void setContext(Context key, Object value) {
 		context.put(key, value);
 	}
-	public Object getContextByKey(String key) {
+	public Object getContext(Context key) {
 		return context.get(key);
 	}
 }

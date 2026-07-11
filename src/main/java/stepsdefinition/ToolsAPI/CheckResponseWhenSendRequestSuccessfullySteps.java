@@ -12,7 +12,9 @@ import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
 
+import common.Context;
 import common.RequestUtils;
+import common.ScenarioContext;
 import io.cucumber.datatable.DataTable;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
@@ -28,6 +30,11 @@ public class CheckResponseWhenSendRequestSuccessfullySteps {
 	String available;
 	HttpResponse<String> response;
 	Map<String, String> headers = new HashMap<String, String>();
+	private final ScenarioContext scenarioContext;
+	public CheckResponseWhenSendRequestSuccessfullySteps(ScenarioContext scenarioContext) {
+		this.scenarioContext = scenarioContext;
+	}
+
 	@Given("I have header")
 	public void i_have_header(DataTable headerTable) {
 		List<Map<String, String>> originalHeaders = headerTable.asMaps(String.class, String.class);
@@ -36,6 +43,7 @@ public class CheckResponseWhenSendRequestSuccessfullySteps {
 			String value = header.get("value");
 			headers.put(key,value);
 		}
+		scenarioContext.setContext(Context.HEADERS, headers);
 	}
 
 	@Given("I have url and method")
@@ -43,6 +51,8 @@ public class CheckResponseWhenSendRequestSuccessfullySteps {
 		List<Map<String, String>> originalUrlMethods = urlAndMethodTable.asMaps(String.class, String.class);
 		url = originalUrlMethods.get(0).get("url");
 		method = originalUrlMethods.get(0).get("method");
+		scenarioContext.setContext(Context.URL, url);
+		scenarioContext.setContext(Context.METHOD, method);
 	}
 	
 	@Given("I have {string} and {string} of tools and {string} status")
@@ -50,11 +60,8 @@ public class CheckResponseWhenSendRequestSuccessfullySteps {
 		category = givenCategory;
 		result = Integer.parseInt(givenResult);
 		available = givenAvailable;
-//		url = "https://simple-tool-rental-api.glitch.me?category=" + givenCategory + "&results=" + givenResult
-//				+ "&available=" + givenAvailable;
-//		System.out.println(url);
 		newUrl = url.replace("@category", givenCategory).replace("@results", givenResult).replace("@available", givenAvailable);
-//		System.out.println(newUrl);
+
 	}
 
 	@When("send request with valid URL and method and params")
@@ -62,15 +69,6 @@ public class CheckResponseWhenSendRequestSuccessfullySteps {
 		RequestUtils req = new RequestUtils();
 		response = req.sendRequest(newUrl, method, headers, "");
 		System.out.println("abc"+response);
-		
-		//		HttpClient client = HttpClient.newBuilder().followRedirects(HttpClient.Redirect.ALWAYS).build();
-//		HttpRequest request = HttpRequest.newBuilder(URI.create(url)).header("Accept-Encoding", "gzip,deflate,br")
-//				.header("Accept", "application/json").GET().build();
-//		try {
-//			response = client.send(request, HttpResponse.BodyHandlers.ofString());
-//		} catch (Exception e) {
-//			e.printStackTrace();
-//		}
 
 	}
 

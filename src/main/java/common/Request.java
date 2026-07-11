@@ -5,6 +5,7 @@ import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpRequest.BodyPublishers;
 import java.net.http.HttpResponse;
+import java.net.http.HttpResponse.BodyHandlers;
 import java.util.Map;
 
 public class Request {
@@ -28,15 +29,19 @@ public class Request {
 	}
 	
 	public HttpResponse<String> sentPostRequest(String url, String requestBody, Map<String, String> headers) {
-		HttpClient client = HttpClient.newBuilder().followRedirects(HttpClient.Redirect.ALWAYS).build();
 		HttpRequest.Builder reqBuilder = HttpRequest.newBuilder().uri(URI.create(url)).POST(BodyPublishers.ofString(requestBody));
-		headers.forEach(reqBuilder::header);
+		headers.forEach((key,value) -> reqBuilder.header(key, value));
 		HttpRequest request = reqBuilder.build();
+//		HttpClient client = HttpClient.newBuilder().followRedirects(HttpClient.Redirect.ALWAYS).build();
+		HttpClient client = HttpClient.newHttpClient();
 		try {
-			response = client.send(request, HttpResponse.BodyHandlers.ofString());
+			response = client.send(request, BodyHandlers.ofString());
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+		System.out.println("Request body:" +requestBody);
+		System.out.println("status code" +response.statusCode());
+		System.out.println("Response body:" +response.body());
 		return this.response;
 	}
 	
