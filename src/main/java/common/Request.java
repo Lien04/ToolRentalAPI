@@ -3,10 +3,8 @@ package common;
 import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
-import java.net.http.HttpRequest.BodyPublishers;
 import java.net.http.HttpResponse;
 import java.net.http.HttpResponse.BodyHandlers;
-import java.util.HashMap;
 import java.util.Map;
 
 public class Request {
@@ -40,6 +38,9 @@ public class Request {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+		System.out.println("Request body:" +requestBody);
+		System.out.println("status code" +response.statusCode());
+		System.out.println("Response body:" +response.body());
 		return this.response;
 	}
 	
