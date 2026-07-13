@@ -1,10 +1,13 @@
 package stepsdefinition.ToolsAPI;
 
 import io.cucumber.testng.CucumberOptions;
-@CucumberOptions(
-		 features = "src/main/java/features",
-		 glue = {"stepsdefinition"},
-		 plugin = {"pretty", "html:target/cucumber-reports"})
 
+@CucumberOptions(
+		 features = "src/main/java/feature",
+		   glue = {"stepsdefinition.ToolsApi"},
+		   plugin = {"pretty",
+			        "html:target/cucumber-report.html",
+			        "json:target/cucumber.json"})
 public class TestRunner {
+
 }

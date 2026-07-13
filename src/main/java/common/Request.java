@@ -1,40 +1,20 @@
 package common;
 
 import java.net.URI;
-import java.net.URL;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
-import java.util.HashMap;
+import java.net.http.HttpResponse.BodyHandlers;
 import java.util.Map;
 
 public class Request {
-	String url;
-	HttpMethod method;
-	Map<String, String> headers = new HashMap<String, String>();
+	
 	HttpResponse<String> response;
-
-	public Request(String url, HttpMethod method, Map<String, String> header) {
-		this.url = url;
-		this.method = method;
-		this.headers = header;
+	public Request() {
+		
 	}
-
-	public HttpResponse<String> sendGetRequest() {
-		HttpClient client = HttpClient.newBuilder().followRedirects(HttpClient.Redirect.ALWAYS).build();
-		HttpRequest.Builder requestBuilder = HttpRequest.newBuilder().uri(URI.create(url)).GET();
-		// Add headers using helper to keep header logic in one place
-		requestBuilder = addHeader(requestBuilder);
-		HttpRequest request = requestBuilder.build();
-		try {
-			response = client.send(request, HttpResponse.BodyHandlers.ofString());
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		return this.response;
-	}
-
-	public HttpResponse<String> sendGetRequest() {
+	
+	public HttpResponse<String> sendGetRequest(String url, Map<String, String> headers) {
 		HttpClient client = HttpClient.newBuilder().followRedirects(HttpClient.Redirect.ALWAYS).build();
 		HttpRequest.Builder requestBuilder = HttpRequest.newBuilder().uri(URI.create(url)).GET();
 		headers.forEach(requestBuilder::header);
@@ -46,4 +26,19 @@ public class Request {
 		}
 		return this.response;
 	}
+	
+	public HttpResponse<String> sentPostRequest(String url, String requestBody, Map<String, String> headers) {
+		HttpRequest.Builder reqBuilder = HttpRequest.newBuilder().uri(URI.create(url)).POST(HttpRequest.BodyPublishers.ofString(requestBody));
+		headers.forEach((key, value) -> reqBuilder.header(key, value));
+		HttpRequest request = reqBuilder.build();
+//		HttpClient client = HttpClient.newBuilder().followRedirects(HttpClient.Redirect.ALWAYS).build();
+		HttpClient client = HttpClient.newHttpClient();
+		try {
+			response = client.send(request, BodyHandlers.ofString());
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return this.response;
+	}
+	
 }
