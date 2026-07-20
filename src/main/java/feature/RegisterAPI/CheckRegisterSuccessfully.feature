@@ -1,5 +1,5 @@
 Feature: register API
-
+@HappyCase
   Scenario Outline: check register new user successfully
     Given I have header
       | key             | value                                   |
@@ -13,8 +13,8 @@ Feature: register API
       | requestBody                         |
       | UserRegister\\User_RequestBody.json |
     When send post request
-    Then Api responds status code "<StatusCode>"
-    Then Api responds body
+    Then Api responds status code with "<StatusCode>"
+    Then Api responds Error message "<ErrorMessage>"
 
     Examples:
       | StatusCode |
